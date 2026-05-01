@@ -1,5 +1,5 @@
 {
-  "name": "selenium-to-playwright-migration",
+  "name": "ts-selenium-simple",
   "version": "1.0.0",
   "description": "Playwright test automation framework migrated from Selenium + TestNG (Java/Maven)",
   "scripts": {
