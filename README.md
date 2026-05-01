@@ -1,87 +1,136 @@
-selenium-testng-framework
----
+# Playwright Test Automation Framework
 
----
-A sample framework based on Page Object Model, Selenium, TestNG using Java.
+A test automation framework based on **Page Object Model** and **Playwright** using TypeScript.
 
-This framework is based in **Page Object Model (POM).**
+> **Migrated from:** Selenium + TestNG (Java/Maven). See [MIGRATION_PLAN.md](./MIGRATION_PLAN.md) and [MIGRATION_RUNBOOK.md](./MIGRATION_RUNBOOK.md) for details.
 
-The framework uses:
+## Tech Stack
 
-1. Java
-2. Selenium
-3. TestNG
-4. ExtentReport
-5. Log4j
-6. SimpleJavaMail
+- [Playwright](https://playwright.dev/) — Browser automation and testing
+- [TypeScript](https://www.typescriptlang.org/) — Type-safe JavaScript
+- [Playwright Test](https://playwright.dev/docs/test-intro) — Built-in test runner with parallel execution
 
-Steps to create test cases:
-----
-Let's say we want to automate Google search test.  
+## Prerequisites
 
-1.Create GoogleSearchPage in **pages** package.  
-  A page class typically should contain all the elements that are present on the page and corresponding action methods.
-  
-  ```
-  public class GooglePage extends BasePage {
-	
-	@FindBy(name = "q")
-	private WebElement searchinput;
+- Node.js 18+
+- npm 9+
 
-	public GooglePage(WebDriver driver) {
-		super(driver);
-	}
+## Setup
 
-	public void searchText(String key) {
-		searchinput.sendKeys(key + Keys.ENTER);
-	}
+```bash
+npm install
+npx playwright install --with-deps
+```
 
+## Running Tests
+
+```bash
+# Run all tests across all browsers
+npm test
+
+# Run tests for a specific browser
+npm run test:chromium
+npm run test:firefox
+npm run test:webkit
+
+# Run tests in headed mode (visible browser)
+npm run test:headed
+
+# Run tests in debug mode (Playwright Inspector)
+npm run test:debug
+
+# Run tests with Playwright UI mode
+npm run test:ui
+```
+
+## Viewing Reports
+
+After running tests, an HTML report is generated automatically:
+
+```bash
+npm run report
+```
+
+Reports are saved in the `playwright-report/` directory.
+
+## Project Structure
+
+```
+├── playwright.config.ts          # Playwright configuration (browsers, reporters, timeouts)
+├── package.json                  # Dependencies and scripts
+├── tsconfig.json                 # TypeScript configuration
+├── pages/                        # Page Object classes
+│   ├── base.page.ts              # Base page with common methods
+│   ├── google.page.ts            # Google search page
+│   └── facebook-login.page.ts    # Facebook login page
+├── tests/                        # Test specifications
+│   ├── google-search.spec.ts     # Google search tests
+│   └── facebook-login.spec.ts    # Facebook login tests
+├── MIGRATION_PLAN.md             # Migration planning document
+└── MIGRATION_RUNBOOK.md          # Migration patterns and runbook
+```
+
+## Creating New Tests
+
+### 1. Create a Page Object
+
+```typescript
+import { type Page } from '@playwright/test';
+import { BasePage } from './base.page.js';
+
+export class MyPage extends BasePage {
+  private readonly myElement = this.page.locator('#my-element');
+
+  constructor(page: Page) {
+    super(page);
+  }
+
+  async doSomething(): Promise<void> {
+    await this.myElement.click();
+  }
 }
 ```
-2.Create the test class which class the methods of GoogleSearchPage
 
+### 2. Create a Test Spec
+
+```typescript
+import { test, expect } from '@playwright/test';
+import { MyPage } from '../pages/my.page.js';
+
+test.describe('My Feature', () => {
+  test('should do something', async ({ page }) => {
+    const myPage = new MyPage(page);
+    await myPage.navigate('https://example.com');
+    await myPage.doSomething();
+    await expect(page).toHaveTitle(/Expected Title/);
+  });
+});
 ```
-@Test(testName = "Google search test", description = "Test description")
-public class GoogleSearchTest extends BaseTest {
 
-	@Test
-	public void googleSearchTest() {
-		driver.get("https://www.google.co.in/");
-		GooglePage googlePage = PageinstancesFactory.getInstance(GooglePage.class);
-		googlePage.searchText("abc");
-		Assert.assertTrue(driver.getTitle().contains("abc"), "Title doesn't contain abc : Test Failed");
-	}
-}
-```
-3.Add the test class in testng.xml file under the folder `src/test/resources/suites/`
+## Configuration
 
-```
-<suite name="Suite">
-	<listeners></listeners>
-	<test thread-count="5" name="Test" parallel="classes">
-		<classes>
-			<class name="example.example.tests.GoogleSearchTest" />
-```
-4.Execute the test cases by maven command `mvn clean test`
+Key settings in `playwright.config.ts`:
 
----
+| Setting | Value | Description |
+|---------|-------|-------------|
+| `fullyParallel` | `true` | Tests run in parallel across workers |
+| `retries` | `2` (CI) / `0` (local) | Automatic retries on failure |
+| `trace` | `on-first-retry` | Trace collection for debugging failures |
+| `screenshot` | `only-on-failure` | Automatic screenshots on test failure |
+| `video` | `on-first-retry` | Video recording on first retry |
+| `projects` | Chromium, Firefox, WebKit | Cross-browser testing |
 
-Reproting
----
-The framework gives report in three ways,
+## Key Differences from Selenium Framework
 
-1. Log - In file `logfile.log`.
-2. A html report - Which is generated using extent reports, under the folder `ExtentReports`.
-3. A mail report - For which the toggle `mail.sendmail` in `test.properties` should be set `true`. And all the properties such as `smtp host, port, proxy details, etc.,` should be provided correctly.
-
----
-
-Key Points:
----
-
-1. The class `WebDriverContext` is responsible for maintaining the same WebDriver instance throughout the test. So whenever you require a webdriver instance which has been using for current test (In current thread) always call `WebDriverContext.getDriver()`.
-2. Always use `PageinstancesFactory.getInstance(type)` to get the instance of particular Page Object. (Of course you can use `new` but it's better use a single approach across the framework.
-
----
-
->For any query or suggestions please do comment or mail @ diggavibharathish@gmail.com 
+| Selenium + TestNG | Playwright |
+|-------------------|------------|
+| `WebDriverManager` + `ChromeDriver` | Built-in browser management |
+| `PageFactory.initElements()` | Lazy locators (no initialization needed) |
+| `FluentWait` / implicit waits | Auto-wait (built-in) |
+| `@FindBy` annotations | `page.locator()` / `page.getByRole()` |
+| `Assert.assertTrue()` | `expect()` with auto-retry |
+| `ExtentReports` | Built-in HTML reporter |
+| `Log4j` | Trace viewer + console output |
+| `testng.xml` suite config | `playwright.config.ts` |
+| `WebDriverContext` (ThreadLocal) | Playwright fixtures (automatic) |
+| `PageinstancesFactory` | Direct `new Page(page)` construction |
