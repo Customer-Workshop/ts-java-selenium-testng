@@ -1,6 +1,6 @@
 package example.example.tests;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -74,7 +74,7 @@ public class BaseTest {
 		ops.addArguments("--disable-dev-shm-usage");
 		driver = new ChromeDriver(ops);
 		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 		WebDriverContext.setDriver(driver);
 	}
 
