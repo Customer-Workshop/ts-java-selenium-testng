@@ -12,7 +12,6 @@ import org.testng.annotations.Listeners;
 import example.example.context.WebDriverContext;
 import example.example.listeners.LogListener;
 import example.example.listeners.ReportListener;
-import example.example.listeners.SuiteSummaryListener;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
@@ -20,7 +19,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  *
  * @author Bharathish
  */
-@Listeners({ ReportListener.class, LogListener.class, SuiteSummaryListener.class })
+@Listeners({ ReportListener.class, LogListener.class })
 public class BaseTest {
 
 	/** The driver. */
