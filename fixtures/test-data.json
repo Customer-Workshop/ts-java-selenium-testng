@@ -1,0 +1,45 @@
+{
+  "testClients": {
+    "newClient": {
+      "name": "AutoTest_Client",
+      "description": "Client created by automated test"
+    }
+  },
+  "testContexts": {
+    "newContext": {
+      "name": "AutoTest_Context",
+      "description": "Context for automated testing"
+    }
+  },
+  "testDefinitions": {
+    "newDefinition": {
+      "name": "AutoTest_Definition",
+      "sourceType": "Excel"
+    }
+  },
+  "testTemplates": {
+    "newTemplate": {
+      "name": "AutoTest_Template"
+    }
+  },
+  "testPlans": {
+    "newPlan": {
+      "name": "AutoTest_Plan",
+      "context": "Default",
+      "template": "Default"
+    }
+  },
+  "testValidations": {
+    "rule1": {
+      "condition": "{Mail: Max Amount Due}=\" \"",
+      "message": "Max Amount cannot be blank"
+    }
+  },
+  "statusColors": {
+    "open": "grey",
+    "pendingReview": "orange",
+    "approved": "green",
+    "published": "darkgreen",
+    "rejected": "red"
+  }
+}

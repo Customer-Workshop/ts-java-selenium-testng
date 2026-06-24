@@ -1,0 +1,32 @@
+{
+  "name": "gxcapture-playwright-tests",
+  "version": "1.0.0",
+  "description": "Playwright test automation for GxCapture Redbird Benefits Management application",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:ui": "npx playwright test --ui",
+    "test:debug": "npx playwright test --debug",
+    "test:portal": "npx playwright test tests/portal/",
+    "test:clients": "npx playwright test tests/manage-clients/",
+    "test:context": "npx playwright test tests/manage-context/",
+    "test:definitions": "npx playwright test tests/manage-definitions/",
+    "test:hierarchy": "npx playwright test tests/hierarchy/",
+    "test:templates": "npx playwright test tests/templates/",
+    "test:plans": "npx playwright test tests/plans/",
+    "test:workqueue": "npx playwright test tests/my-work-queue/",
+    "test:roles": "npx playwright test tests/roles-and-privileges/",
+    "test:lifecycle": "npx playwright test tests/plan-lifecycle/",
+    "test:rules": "npx playwright test tests/rules/",
+    "test:load": "npx playwright test tests/load-definitions/",
+    "test:reports": "npx playwright test tests/report-configuration/",
+    "test:exports": "npx playwright test tests/exports/",
+    "report": "npx playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.44.0",
+    "@types/node": "^20.12.0",
+    "dotenv": "^17.4.2",
+    "typescript": "^5.4.0"
+  }
+}
