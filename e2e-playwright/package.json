@@ -1,0 +1,16 @@
+{
+  "name": "e2e-playwright",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Playwright TypeScript migration of the legacy Selenium/TestNG FaceBookLoginTest",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.48.2",
+    "@types/node": "20.16.11",
+    "typescript": "5.6.3"
+  }
+}
