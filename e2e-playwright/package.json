@@ -1,0 +1,10 @@
+{
+  "name": "ts-java-selenium-testng-playwright",
+  "private": true,
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.50.1"
+  }
+}
