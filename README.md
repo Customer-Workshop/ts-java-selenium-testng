@@ -100,7 +100,7 @@ Jobs:
 1. **Compile check** - `mvn -ntp -B clean test-compile` on Temurin 17 with the Maven cache.
 2. **UI suite** - runs the TestNG suite headlessly on a `chrome`/`firefox` matrix, publishes the ExtentReports HTML, `logfile.log`, Surefire/TestNG results (screenshots are embedded in the Extent report as base64) and writes a pass/fail table into the job summary.
 3. **Dependency vulnerability scan** - Trivy filesystem scan uploaded as SARIF, plus the resolved dependency tree as an artifact.
-4. **Dependency review** - `actions/dependency-review-action` on pull requests.
+4. **Dependency review** - `actions/dependency-review-action` on pull requests. It needs the repository's Dependency graph enabled (Settings > Code security) and is non-blocking until then.
 
 The suite job is deliberately non-blocking (`continue-on-error` plus
 `-Dmaven.test.failure.ignore=true`): the demo tests drive public websites
