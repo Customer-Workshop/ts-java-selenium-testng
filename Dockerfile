@@ -37,13 +37,21 @@ WORKDIR /harness
 COPY pom.xml ./
 RUN mvn -B -ntp dependency:go-offline
 COPY src ./src
-# Compile, then walk the full `test` lifecycle with execution skipped: dependency:go-offline
-# does not fetch the default lifecycle plugins (resources/compiler/surefire), which offline
-# runs need in the local repository.
+# Prime the local repository by really executing the suite once: dependency:go-offline does
+# not fetch the default lifecycle plugins, and Surefire resolves its provider
+# (surefire-testng) only when tests actually run — skipping execution leaves it missing and
+# the offline entrypoint then fails. Failures here are ignored: this layer exists to warm
+# ~/.m2, not to gate the build (the suite drives an external site).
 RUN mvn -B -ntp test-compile \
- && mvn -B -ntp test -Dmaven.test.skip.exec=true
+ && mvn -B -ntp test \
+      -Dsurefire.suiteXmlFiles=src/test/resources/suites/smoke.xml \
+      -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver \
+      -Dmaven.test.failure.ignore=true \
+ && rm -rf target/surefire-reports test-output ExtentReports logfile.log
 
 ENV SUITE_FILE=src/test/resources/suites/smoke.xml
-ENV MAVEN_ARGS="-B -ntp -o"
+# Deliberately not named MAVEN_ARGS: Maven 3.9 auto-consumes that variable, which would
+# apply these flags to every mvn invocation in the image.
+ENV HARNESS_MAVEN_ARGS="-B -ntp -o"
 
-ENTRYPOINT ["/bin/sh", "-c", "mvn ${MAVEN_ARGS} test -Dsurefire.suiteXmlFiles=${SUITE_FILE} -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver"]
+ENTRYPOINT ["/bin/sh", "-c", "mvn ${HARNESS_MAVEN_ARGS} test -Dsurefire.suiteXmlFiles=${SUITE_FILE} -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver"]

@@ -41,13 +41,21 @@ Both jobs reach public internet targets (Google/Facebook), which GitHub-hosted r
 do; results still depend on those third-party sites, so treat nightly failures as
 "investigate the external target first".
 
+`GoogleSearchTest` is also mildly **flaky in containers**: in ~2 of 5 runs inside the harness
+image, Google served an interstitial and the assertion `Title doesn't contain abc` failed
+(host runs were 3/3 green). Treat isolated smoke failures with that message as environmental
+and re-run; the durable fix is a `WebDriverWait` on the title inside the test, which is out of
+scope for this CI change.
+
 ### Driver resolution in CI
 
 `browser-actions/setup-chrome` installs Chrome **and** a matching chromedriver; the driver
 path is passed to Maven as `-Dwebdriver.chrome.driver` / `-Dwdm.chromeDriverPath`, so
 WebDriverManager uses the local binary instead of downloading one — the run works without
 egress to the driver CDN. The container image (`Dockerfile`) bakes Chrome in for the same
-reason and runs Maven offline (`-o`) against a pre-warmed `~/.m2`.
+reason, bakes a Chrome-for-Testing chromedriver into the Selenium cache, and runs Maven
+offline (`-o`) against a `~/.m2` primed by executing the suite once at build time — verified
+with `docker run --network none`, where Chrome and chromedriver start with zero egress.
 
 ## MOCK AWS configuration — nothing here is real
 
