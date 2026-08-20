@@ -59,7 +59,7 @@ def main():
         lines.append("")
         lines.append(
             "> The demo suite drives public websites and `FaceBookLoginTest` "
-            "asserts false by design, so failures here do not fail the workflow."
+            "fails by design, so failures here do not fail the workflow."
         )
     else:
         lines.append("All tests passed.")
