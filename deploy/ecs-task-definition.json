@@ -1,0 +1,28 @@
+{
+  "family": "__TASK_FAMILY__",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "2048",
+  "memory": "4096",
+  "executionRoleArn": "__EXECUTION_ROLE_ARN__",
+  "containerDefinitions": [
+    {
+      "name": "selenium-testng-harness",
+      "image": "__IMAGE_URI__",
+      "essential": true,
+      "environment": [
+        { "name": "ENV_NAME", "value": "__ENV_NAME__" },
+        { "name": "SUITE_FILE", "value": "src/test/resources/suites/smoke.xml" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/demo/selenium-testng-harness",
+          "awslogs-region": "__AWS_REGION__",
+          "awslogs-stream-prefix": "harness",
+          "awslogs-create-group": "true"
+        }
+      }
+    }
+  ]
+}

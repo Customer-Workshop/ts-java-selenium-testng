@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<!--
+  Smoke suite used by CI. It excludes FaceBookLoginTest, which asserts
+  Assert.assertTrue(false, ...) on purpose and therefore always fails.
+  The full suite (suites/testng.xml) is exercised by the nightly workflow.
+-->
+<suite name="Smoke Suite">
+	<listeners></listeners>
+	<test thread-count="1" name="Smoke" parallel="classes">
+		<classes>
+			<class name="example.example.tests.GoogleSearchTest" />
+		</classes>
+	</test> <!-- Smoke -->
+</suite> <!-- Smoke Suite -->
